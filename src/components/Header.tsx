@@ -1,18 +1,40 @@
 import styles from "./Header.module.css";
 
 import todoLogo from "../assets/todo-logo.svg";
-import plusIcon from "../assets/plus-icon.svg";
+import { PlusCircle } from "phosphor-react";
+import { ChangeEvent, FormEvent, useState } from "react";
 
-export function Header() {
+interface Props {
+  onAddTask: (title: string) => void;
+}
+
+export function Header({ onAddTask }: Props) {
+  const [title, setTitle] = useState("");
+
+  function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    onAddTask(title);
+    setTitle("");
+  }
+
+  function onChangeTitle(event: ChangeEvent<HTMLInputElement>) {
+    setTitle(event.target.value);
+  }
+
   return (
     <header className={styles.header}>
       <img src={todoLogo} alt="Todo Logo" />
 
-      <form className={styles.newTask}>
-        <input placeholder="Adicione uma nova tarefa" />
+      <form className={styles.newTask} onSubmit={handleSubmit}>
+        <input
+          placeholder="Adicione uma nova tarefa"
+          onChange={onChangeTitle}
+          value={title}
+        />
         <button>
           Criar
-          <img src={plusIcon} />
+          <PlusCircle size={20} />
         </button>
       </form>
     </header>
